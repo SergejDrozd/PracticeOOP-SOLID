@@ -1,55 +1,33 @@
 class WarehouseDock
 {
-    // Решил использовать три очереди, чтобы обеспечить условие:
-    // Если приоритеты равны, первым обслуживается тот, кто приехал раньше
-    private Queue<string> high = new Queue<string>();
-    private Queue<string> medium = new Queue<string>();
-    private Queue<string> low = new Queue<string>();
+    private PriorityQueue<string, (int priority, int order)> queue
+        = new PriorityQueue<string, (int priority, int order)>();
+
+    private int arrivalCounter = 0;
 
 
     public void RegisterTruck(string plate, int priority)
     {
-        switch (priority)
+        if (priority < 1 || priority > 3)
         {
-            case 3:
-                {
-                    high.Enqueue(plate);
-                    break;
-                }
-
-            case 2:
-                {
-                    medium.Enqueue(plate);
-                    break;
-                }
-
-            case 1:
-                {
-                    low.Enqueue(plate);
-                    break;
-                }
-
-            default:
-                {
-                    throw new ArgumentException("Error priority");
-                }
+            throw new ArgumentException("Error priority");
         }
+
+        // Инвертируем приоритет, чтобы 3 обслуживался раньше 1
+        int invertedPriority = -priority;
+
+        // Добавляем грузовик в очередь
+        queue.Enqueue(plate, (invertedPriority, arrivalCounter));
+
+        arrivalCounter++;
     }
 
 
     public void ProcessNextTruck()
     {
-        if (high.Count > 0)
+        if (queue.TryDequeue(out string plate, out _))
         {
-            Console.WriteLine($"Грузовик {high.Dequeue()} разгружен");
-        }
-        else if (medium.Count > 0)
-        {
-            Console.WriteLine($"Грузовик {medium.Dequeue()} разгружен");
-        }
-        else if (low.Count > 0)
-        {
-            Console.WriteLine($"Грузовик {low.Dequeue()} разгружен");
+            Console.WriteLine($"Грузовик {plate} разгружен");
         }
         else
         {
@@ -57,5 +35,3 @@ class WarehouseDock
         }
     }
 }
-
-
