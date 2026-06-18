@@ -1,21 +1,41 @@
 ﻿class WarehouseDock
 {
-    //Решил использовать три очереди, чтобы обеспечить условие: Если приоритеты равны, первым обслуживается тот, кто приехал раньше
+    // Решил использовать три очереди, чтобы обеспечить условие:
+    // Если приоритеты равны, первым обслуживается тот, кто приехал раньше
     private Queue<string> high = new Queue<string>();
     private Queue<string> medium = new Queue<string>();
     private Queue<string> low = new Queue<string>();
+
 
     public void RegisterTruck(string plate, int priority)
     {
         switch (priority)
         {
-            case 3: high.Enqueue(plate); break;
-            case 2: medium.Enqueue(plate); break;
-            case 1: low.Enqueue(plate); break;
+            case 3:
+                {
+                    high.Enqueue(plate);
+                    break;
+                }
+
+            case 2:
+                {
+                    medium.Enqueue(plate);
+                    break;
+                }
+
+            case 1:
+                {
+                    low.Enqueue(plate);
+                    break;
+                }
+
             default:
-                throw new ArgumentException("Error priority");
+                {
+                    throw new ArgumentException("Error priority");
+                }
         }
     }
+
 
     public void ProcessNextTruck()
     {
